@@ -1,0 +1,20 @@
+{
+  "name": "gutenberg",
+  "version": "0.0.1",
+  "description": "Offline-first e-book reader",
+  "repository": "https://github.com/glynnbird/gutenberg.git",
+  "keywords": [
+    "CouchDB",
+    "Cloudant",
+    "gutenberg",
+    "offline-first"
+  ],
+  "author": "Glynn Bird",
+  "license": "BSD",
+  "dependencies": {
+    "async": "^1.3.0",
+    "cloudant": "^1.1.0",
+    "line-reader": "^0.2.4",
+    "minimist": "^1.1.1"
+  }
+}
