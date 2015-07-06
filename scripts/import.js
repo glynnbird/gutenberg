@@ -41,6 +41,7 @@ var download = function(url, dest, cb) {
 
 
 var db = null,
+  dl = 0,
   paras = [],
   filename = "./tmp/" + meta._id + ".txt";
 
@@ -106,11 +107,13 @@ async.series([
   
   // save the data
   function(cb) {
+    console.log("Wrting data in bulk");
+    
     var p = 1000;
     var docs = [];
     var txt = "";
     for(var i in paras) {
-      txt += paras[i];
+      txt += paras[i] + "\n";
       if(i!=0 && i%20==0 || i == paras.length - 1) {
         var obj = {
           _id : "" + p++,
@@ -122,13 +125,26 @@ async.series([
     }
     db.bulk({docs: docs}, function(err, data) {
       console.log("Saved",paras.length, "paragraphs in",docs.length,"documents");
+      dl = docs.length;
       cb(null,null);
     })
+  },
+  
+  // setting the security object for this datbase
+  function(cb) {
+    console.log("Making the database readable");
+    var obj = { };
+    obj.nobody = ["_reader","_replicator"];
+    db.set_security(obj, function(err,data) {
+      console.log(data);
+      cb(null,null);
+    });
   },
   
   // create meta data
   function(cb) {
     console.log("Creating new meta data");
+    meta.num_docs = dl;
     console.log(meta);
     cloudant.db.create("ebooks", function(err, data) {
       var ebooksdb = cloudant.db.use("ebooks");

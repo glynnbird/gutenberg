@@ -1,0 +1,103 @@
+.gutenberg {
+  height:200px;
+}
+
+body {
+  background-color:#666;
+}
+
+.me {
+
+ border-radius:5px;
+}
+
+.faded {
+   opacity: 0.45;
+}
+
+.palette0 {
+  background-color: #373D4B;
+  color: #8CB2DD;
+}
+
+.palette1 {
+  background-color: #8694AB;
+}
+
+.palette2 {
+  background-color: #97C7EF;
+}
+
+.palette3 {
+  background-color: #DAE2EB;
+}
+
+.palette1 h2, .palette2 h2, .palette3 h2 {
+  color:  #373D4B;
+}
+
+.alert-book {
+  background-color: #DAE2EB;
+}
+
+
+.alert a , .alert a:hover, .alert a:visited{
+  color:#333;
+}
+
+.palette1 div, .palette2 div, .palette3 div {
+  color:  #373D4B;
+  
+}
+
+.foot a , .foot a:hover, .foot a:visited {
+  color: #373D4B;
+  font-size:16px;
+}
+
+#removefilter {
+  display: none;
+}
+
+.alert img {
+}
+.alert {
+  height: 200px;
+  width:100%;
+  display: table;
+}
+
+
+
+.palette4 {
+  background-color: #8CB2DD;
+}
+.spc { 
+  font-size: 10px;
+  margin-right:5px;
+}
+
+#bookslist {
+}
+
+#thebook {
+  background-color:white;
+  font-color: black;
+  padding:36px;
+  display: none;
+}
+
+#thebook p {
+  font-size:24px;
+  margin-bottom:25px;
+}
+
+.foot {
+  display: table-footer-group;
+  overflow: hidden;
+}
+
+
+#readbar {
+  display:none;
+}
