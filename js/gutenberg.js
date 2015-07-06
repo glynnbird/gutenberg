@@ -200,7 +200,7 @@ var clearout = function() {
       var db = new PouchDB(data.rows[i].doc.db_name);
       db.destroy();
     }
-    console.log(data);
+    ebooksdb.destroy();
   });
   
 }
@@ -222,6 +222,9 @@ $(function () {
     });
 });
 
-ebooksdb.replicate.from(stub + "/ebooks");
+ebooksdb.replicate.from(stub + "/ebooks").
+on("complete", function() {
+  renderEbooksList();
+});
 renderEbooksList();
 
