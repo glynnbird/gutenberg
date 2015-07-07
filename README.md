@@ -75,10 +75,21 @@ When a used elects to download a book, that book's database is replicated to an 
     })
 ```
 
+## How did the data get in there in the first place?
+
+In the scripts directory of this repository, there is an `import.js` which downloads an ebook from Project Gutenberg, splits the text into paragraphs, uploads 
+documents to Cloudant and saves the meta data in the `ebooks` database.
+
+The `import.sh` script runs this script once for each book.
+
 ## To do
 
 * this isn't a true "offline first" app yet, because the html, js & css needed to render the page are not cached offline. 
 * your place in the book is not stored yet
 
+
+## Acknowledgements
+
+Many thanks to Project Gutenberg for creating this library of out-of-copyright works and publishing them for free.
 
     
