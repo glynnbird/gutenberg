@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Delete ebooks database
+curl -X DELETE "$COUCH_URL/ebooks"
+
 # Dickens
 node import.js --title "The Pickwick Papers" --author "Charles Dickens" --year 1837 --id 580
 node import.js --title "Nicholas Nickleby" --author "Charles Dickens" --year 1839 --id 967

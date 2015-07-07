@@ -125,70 +125,74 @@ var renderEbooksList = function() {
   }
   ebooksdb.query(map, {include_docs:true}, function(err,data) {
     var tasks = [];
-    console.log(data);
-    for(var i in data.rows) {
-      (function(book){
-        tasks.push(function(cb) {
-          var pdb = new PouchDB(book.db_name);
-          pdb.info(function(err, res) {
-            book.on_device = (res.doc_count > 0)?true:false;
-            cb(null, book);
+    if(data.rows.length ==0 ){
+      $('#bookslist').html("<h2>Just loading the book list into your browser...</h2>");
+    } else {
+      for(var i in data.rows) {
+        (function(book){
+          tasks.push(function(cb) {
+            var pdb = new PouchDB(book.db_name);
+            pdb.info(function(err, res) {
+              book.on_device = (res.doc_count > 0)?true:false;
+              cb(null, book);
+            });
           });
-        });
-      })(data.rows[i].doc);
-    //  ebooks.push(data.rows[i].doc);
-    }
+        })(data.rows[i].doc);
+      //  ebooks.push(data.rows[i].doc);
+      }
     
-    async.parallelLimit(tasks,5,function(err, data) {
-      // final sort
-      if (sortMethod == BY_DEVICE) {
-        data.sort(function(a,b) {
-          if(a.on_device==true && b.on_device==false) {
-            return -1
-          } if(a.on_device==false && b.on_device==true) {
-            return 1
-          } else {
-            return 0;
+      async.parallelLimit(tasks,5,function(err, data) {
+        // final sort
+        if (sortMethod == BY_DEVICE) {
+          data.sort(function(a,b) {
+            if(a.on_device==true && b.on_device==false) {
+              return -1
+            } if(a.on_device==false && b.on_device==true) {
+              return 1
+            } else {
+              return 0;
+            }
+          })
+        }
+
+      
+      
+        var html = "";
+        html += '<div class="row">';
+        for(var i in data) {
+          if(i>0 && i%6==0) {
+            html += '</div><div class="row">';
           }
-        })
-      }
+          var book = data[i];
+          html += '<div class="col-md-2">';
+          html += '<div class="alert alert-book">';
+          html += '<h4 class="text-center">' + book.title  + '</h4>';
+          html += '<p class="text-center">' + book.author + '</p>';
+          html += '<p class="text-center">' + book.year + '</p>';
+          html += '<span class="foot" id="book_' + book.db_name + '_status">';
+          if (book.on_device) {
+            html += '<a href="Javascript:read(\'' + book.db_name + '\')" title="Read">';
+            html += '<span class="glyphicon glyphicon-play" aria-hidden="true"></span>';
+            html += '</a>';  
+            html += " &nbsp; &nbsp; &nbsp; "
+            html += '<a href="Javascript:deleteEbook(\'' + book.db_name + '\')" title="Delete">';
+            html += '<span class="glyphicon glyphicon-trash" aria-hidden="true"></span>';
+            html += '</a>';  
+          } else {
+            html += '<a href="Javascript:download(\'' + book.db_name + '\',' + book.num_docs + ')" title="Download">';
+            html += '<span class="glyphicon glyphicon-cloud-download" aria-hidden="true"></span>'; 
+            html += '</a>';         
+          }
+          html += '</span>'
+          html += '</div>';
+          html += '</div>';
 
-      
-      
-      var html = "";
-      html += '<div class="row">';
-      for(var i in data) {
-        if(i>0 && i%6==0) {
-          html += '</div><div class="row">';
         }
-        var book = data[i];
-        html += '<div class="col-md-2">';
-        html += '<div class="alert alert-book">';
-        html += '<h4 class="text-center">' + book.title  + '</h4>';
-        html += '<p class="text-center">' + book.author + '</p>';
-        html += '<p class="text-center">' + book.year + '</p>';
-        html += '<span class="foot" id="book_' + book.db_name + '_status">';
-        if (book.on_device) {
-          html += '<a href="Javascript:read(\'' + book.db_name + '\')" title="Read">';
-          html += '<span class="glyphicon glyphicon-play" aria-hidden="true"></span>';
-          html += '</a>';  
-          html += " &nbsp; &nbsp; &nbsp; "
-          html += '<a href="Javascript:deleteEbook(\'' + book.db_name + '\')" title="Delete">';
-          html += '<span class="glyphicon glyphicon-trash" aria-hidden="true"></span>';
-          html += '</a>';  
-        } else {
-          html += '<a href="Javascript:download(\'' + book.db_name + '\',' + book.num_docs + ')" title="Download">';
-          html += '<span class="glyphicon glyphicon-cloud-download" aria-hidden="true"></span>'; 
-          html += '</a>';         
-        }
-        html += '</span>'
         html += '</div>';
-        html += '</div>';
+        $('#bookslist').html(html);
+      });
+    }
 
-      }
-      html += '</div>';
-      $('#bookslist').html(html);
-    })
     
 
   });
@@ -201,9 +205,8 @@ var clearout = function() {
       db.destroy();
     }
     ebooksdb.destroy();
-  });
-  
-}
+  });  
+};
 
 $(function () {
     var currentHash = "#initial_hash"
