@@ -149,10 +149,16 @@ async.series([
     cloudant.db.create("ebooks", function(err, data) {
       var ebooksdb = cloudant.db.use("ebooks");
       ebooksdb.insert(meta, function(err, data) {
-        cb(null, null);
+        var obj = { };
+        obj.nobody = ["_reader","_replicator"];
+        ebooksdb.set_security(obj, function(err,data) {
+          cb(null,null);
+        });
       });
     });
-  }
+  },
+  
+  
   
 ], function() {
   console.log("done");
